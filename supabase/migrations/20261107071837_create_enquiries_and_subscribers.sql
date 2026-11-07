@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS booking_enquiries (
   guests text,
   room_type text,
   email text,
+  phone text,
   offer text,
   status text NOT NULL DEFAULT 'new',
   created_at timestamptz NOT NULL DEFAULT now()

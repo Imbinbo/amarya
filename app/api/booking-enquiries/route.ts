@@ -10,6 +10,7 @@ type EnquiryPayload = {
   guests?: string | null;
   room_type?: string | null;
   email?: string | null;
+  phone?: string | null;
   offer?: string | null;
 };
 
@@ -20,6 +21,19 @@ function jsonError(message: string, status: number) {
 function normalizeSupabaseUrl(value: string) {
   // Accept either the project URL or a REST URL accidentally pasted into Netlify.
   return value.trim().replace(/\/+$/, '').replace(/\/rest\/v1$/i, '');
+}
+
+function validEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function normalizePhone(value: string) {
+  return value.replace(/[\s().-]/g, '');
+}
+
+function validPhone(value: string) {
+  const normalized = normalizePhone(value);
+  return /^\+?[0-9]{7,15}$/.test(normalized);
 }
 
 export async function POST(request: Request) {
@@ -60,21 +74,31 @@ export async function POST(request: Request) {
     if (checkOut <= checkIn) {
       return jsonError('Check-out must be after check-in.', 400);
     }
+    const email = body.email?.trim().toLowerCase() || '';
+    const phone = body.phone?.trim() || '';
+    if (!validEmail(email)) return jsonError('Please enter a valid email address.', 400);
+    if (!validPhone(phone)) return jsonError('Please enter a valid phone number, including country code if needed.', 400);
     table = 'booking_enquiries';
     payload = {
       check_in: checkIn,
       check_out: checkOut,
       guests: body.guests?.trim() || null,
       room_type: body.room_type?.trim() || null,
+      email,
+      phone: normalizePhone(phone),
     };
   } else if (action === 'package') {
     const offer = body.offer?.trim() || '';
+    const email = body.email?.trim().toLowerCase() || '';
+    const phone = body.phone?.trim() || '';
     if (!offer) return jsonError('Please select a package.', 400);
+    if (!validEmail(email)) return jsonError('Please enter a valid email address.', 400);
+    if (!validPhone(phone)) return jsonError('Please enter a valid phone number, including country code if needed.', 400);
     table = 'booking_enquiries';
-    payload = { offer, check_in: null, check_out: null, guests: null, room_type: null, email: null };
+    payload = { offer, email, phone: normalizePhone(phone), check_in: null, check_out: null, guests: null, room_type: null };
   } else if (action === 'reservation') {
     const email = body.email?.trim().toLowerCase() || '';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!validEmail(email)) {
       return jsonError('Please enter a valid email address.', 400);
     }
     table = 'booking_enquiries';

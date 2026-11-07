@@ -25,6 +25,8 @@ export function Hero() {
       check_out: (data.get('checkout') as string) || null,
       guests: (data.get('guests') as string) || null,
       room_type: (data.get('room') as string) || null,
+      email: (data.get('email') as string) || '',
+      phone: (data.get('phone') as string) || '',
     };
     setSubmitting(true);
     try {
@@ -153,7 +155,7 @@ export function Hero() {
       >
         <form
           onSubmit={handleBooking}
-          className="glass-light mx-auto grid w-full max-w-5xl min-w-0 grid-cols-1 gap-4 rounded-2xl px-4 py-4 text-forest-deep shadow-[0_20px_50px_-20px_rgba(20,40,28,0.4)] sm:grid-cols-2 sm:gap-x-4 sm:gap-y-5 sm:px-6 sm:py-5 lg:grid-cols-[repeat(4,minmax(0,1fr))_minmax(170px,auto)] lg:items-end lg:gap-3"
+          className="glass-light mx-auto grid w-full max-w-5xl min-w-0 grid-cols-1 gap-4 rounded-2xl px-4 py-4 text-forest-deep shadow-[0_20px_50px_-20px_rgba(20,40,28,0.4)] sm:grid-cols-2 sm:gap-x-4 sm:gap-y-5 sm:px-6 sm:py-5 lg:grid-cols-3 lg:items-end lg:gap-3"
         >
           <BookingField label="Check-in" type="date" id="checkin" name="checkin" />
           <BookingField label="Check-out" type="date" id="checkout" name="checkout" />
@@ -163,6 +165,8 @@ export function Hero() {
             name="guests"
             options={['1 Guest', '2 Guests', '3 Guests', '4 Guests', '5+ Guests']}
           />
+          <BookingField label="Email" type="email" id="booking-email" name="email" />
+          <BookingField label="Phone" type="tel" id="booking-phone" name="phone" />
           <BookingSelectField
             label="Room"
             id="room"
@@ -177,7 +181,7 @@ export function Hero() {
           <button
             type="submit"
             disabled={submitting}
-            className="mt-1 flex min-h-[52px] w-full min-w-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-forest px-5 py-3.5 text-[12px] font-sans-body uppercase tracking-wide-luxe text-ivory transition-colors hover:bg-forest-deep disabled:cursor-wait disabled:opacity-60 sm:col-span-2 sm:mt-0 sm:px-6 lg:col-span-1 lg:w-auto"
+            className="mt-1 flex min-h-[52px] w-full min-w-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-forest px-5 py-3.5 text-[12px] font-sans-body uppercase tracking-wide-luxe text-ivory transition-colors hover:bg-forest-deep disabled:cursor-wait disabled:opacity-60 sm:col-span-2 sm:mt-0 sm:px-6 lg:col-span-3 lg:w-full"
           >
             {submitting ? (
               <>
@@ -221,6 +225,10 @@ function BookingField({
         name={name}
         type={type}
         required
+        autoComplete={type === 'email' ? 'email' : type === 'tel' ? 'tel' : undefined}
+        inputMode={type === 'tel' ? 'tel' : undefined}
+        pattern={type === 'tel' ? '[+0-9()\\s.-]{7,25}' : undefined}
+        title={type === 'tel' ? 'Enter a valid phone number' : undefined}
         className="block w-full min-w-0 max-w-full border-b border-forest/15 bg-transparent pb-2 font-sans-body text-sm text-forest-deep outline-none transition-colors focus:border-gold [color-scheme:light]"
       />
     </div>

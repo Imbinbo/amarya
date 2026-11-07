@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, type FormEvent } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Tag, Loader2 } from 'lucide-react';
 import { OFFERS } from '@/lib/data';
@@ -13,34 +13,43 @@ export function Offers() {
   const prefersReduced = useReducedMotion();
   const { toast } = useToast();
   const [reserving, setReserving] = useState<string | null>(null);
+  const [selectedOffer, setSelectedOffer] = useState<string | null>(null);
 
-  const handleReserve = useCallback(
-    async (offerTitle: string) => {
-      setReserving(offerTitle);
-      try {
-        const response = await fetch('/api/booking-enquiries', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'package', offer: offerTitle }),
-        });
-        if (!response.ok) throw new Error('Package reservation failed');
-        toast({
-          title: `${offerTitle} reserved`,
-          description:
-            'Our concierge will be in touch to personalise your package.',
-        });
-      } catch {
-        toast({
-          title: 'Something went wrong',
-          description:
-            'We could not reserve this package just now. Please try again.',
-        });
-      } finally {
-        setReserving(null);
-      }
-    },
-    [toast],
-  );
+  const handleReserve = useCallback((offerTitle: string) => {
+    setSelectedOffer(offerTitle);
+  }, []);
+
+  const submitOfferEnquiry = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!selectedOffer) return;
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const email = String(formData.get('email') || '').trim();
+    const phone = String(formData.get('phone') || '').trim();
+    setReserving(selectedOffer);
+    try {
+      const response = await fetch('/api/booking-enquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'package', offer: selectedOffer, email, phone }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Package reservation failed');
+      toast({
+        title: `${selectedOffer} request received`,
+        description: 'Our concierge will be in touch to personalise your package.',
+      });
+      form.reset();
+      setSelectedOffer(null);
+    } catch (error) {
+      toast({
+        title: 'Something went wrong',
+        description: error instanceof Error ? error.message : 'We could not reserve this package just now. Please try again.',
+      });
+    } finally {
+      setReserving(null);
+    }
+  };
 
   return (
     <section id="offers" className="relative bg-background py-24 lg:py-36">
@@ -116,6 +125,48 @@ export function Offers() {
           ))}
         </div>
       </div>
+
+      {selectedOffer && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-forest-deep/70 px-4 py-8 backdrop-blur-sm"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget && !reserving) setSelectedOffer(null);
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="offer-enquiry-title"
+            className="relative w-full max-w-md rounded-sm bg-background p-6 text-forest-deep shadow-2xl sm:p-8"
+          >
+            <button
+              type="button"
+              aria-label="Close reservation form"
+              onClick={() => !reserving && setSelectedOffer(null)}
+              className="absolute right-4 top-4 text-2xl leading-none text-forest/60 hover:text-forest"
+            >
+              ×
+            </button>
+            <p className="text-[10px] uppercase tracking-luxe text-gold">Special offer enquiry</p>
+            <h3 id="offer-enquiry-title" className="mt-2 pr-6 font-serif-display text-3xl font-light">{selectedOffer}</h3>
+            <p className="mt-2 text-sm text-forest/70">Share your contact details and our concierge will get in touch.</p>
+            <form onSubmit={submitOfferEnquiry} className="mt-6 space-y-4">
+              <div>
+                <label htmlFor="offer-email" className="mb-1.5 block text-xs uppercase tracking-wide-luxe text-forest/70">Email address</label>
+                <input id="offer-email" name="email" type="email" required autoComplete="email" placeholder="you@example.com" className="w-full border border-forest/20 bg-transparent px-4 py-3 text-sm outline-none focus:border-gold" />
+              </div>
+              <div>
+                <label htmlFor="offer-phone" className="mb-1.5 block text-xs uppercase tracking-wide-luxe text-forest/70">Phone number</label>
+                <input id="offer-phone" name="phone" type="tel" required autoComplete="tel" inputMode="tel" pattern="[+0-9()\\s.-]{7,25}" title="Enter a valid phone number" placeholder="+91 98765 43210" className="w-full border border-forest/20 bg-transparent px-4 py-3 text-sm outline-none focus:border-gold" />
+              </div>
+              <button type="submit" disabled={!!reserving} className="flex w-full items-center justify-center gap-2 rounded-full bg-forest px-6 py-3.5 text-xs uppercase tracking-wide-luxe text-ivory transition-colors hover:bg-forest-deep disabled:cursor-wait disabled:opacity-60">
+                {reserving ? <><Loader2 className="h-4 w-4 animate-spin" /> Sending</> : <>Send reservation request <ArrowRight className="h-4 w-4" /></>}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
