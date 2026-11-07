@@ -4,7 +4,6 @@ import { useState, type FormEvent } from 'react';
 import { Instagram, Facebook, Twitter, Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
 import { NAV_LINKS } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
-import { getSupabase } from '@/lib/supabase';
 
 export function Footer() {
   const { toast } = useToast();
@@ -16,26 +15,20 @@ export function Footer() {
     const email = (new FormData(form).get('email') as string) || '';
     setSubscribing(true);
     try {
-      const { error } = await getSupabase()
-        .from('newsletter_subscribers')
-        .insert({ email });
-      if (error) {
-        if (error.code === '23505') {
-          toast({
-            title: 'Already subscribed',
-            description: 'This email is already on the Amarya circle list.',
-          });
-        } else {
-          throw error;
-        }
-      } else {
-        form.reset();
-        toast({
-          title: 'Subscribed',
-          description:
-            'Welcome to the Amarya circle. Watch your inbox for island stories.',
-        });
-      }
+      const response = await fetch('/api/booking-enquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'newsletter', email }),
+      });
+      if (!response.ok) throw new Error('Newsletter subscription failed');
+      const result = await response.json();
+      form.reset();
+      toast({
+        title: result.alreadySubscribed ? 'Already subscribed' : 'Subscribed',
+        description: result.alreadySubscribed
+          ? 'This email is already on the Amarya circle list.'
+          : 'Welcome to the Amarya circle. Watch your inbox for island stories.',
+      });
     } catch {
       toast({
         title: 'Something went wrong',

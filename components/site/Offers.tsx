@@ -8,7 +8,6 @@ import { SectionHeading } from '@/components/motion/SectionHeading';
 import { Reveal } from '@/components/motion/Reveal';
 import { MagneticButton } from '@/components/motion/MagneticButton';
 import { useToast } from '@/hooks/use-toast';
-import { getSupabase } from '@/lib/supabase';
 
 export function Offers() {
   const prefersReduced = useReducedMotion();
@@ -19,10 +18,12 @@ export function Offers() {
     async (offerTitle: string) => {
       setReserving(offerTitle);
       try {
-        const { error } = await getSupabase()
-          .from('booking_enquiries')
-          .insert({ offer: offerTitle });
-        if (error) throw error;
+        const response = await fetch('/api/booking-enquiries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'package', offer: offerTitle }),
+        });
+        if (!response.ok) throw new Error('Package reservation failed');
         toast({
           title: `${offerTitle} reserved`,
           description:

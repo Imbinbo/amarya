@@ -20,6 +20,7 @@ export function Hero() {
     const form = e.currentTarget;
     const data = new FormData(form);
     const payload = {
+      action: 'availability',
       check_in: (data.get('checkin') as string) || null,
       check_out: (data.get('checkout') as string) || null,
       guests: (data.get('guests') as string) || null,

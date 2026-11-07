@@ -6,7 +6,6 @@ import { ArrowRight, Loader2 } from 'lucide-react';
 import { FINAL_CTA_IMAGE } from '@/lib/data';
 import { MagneticButton } from '@/components/motion/MagneticButton';
 import { useToast } from '@/hooks/use-toast';
-import { getSupabase } from '@/lib/supabase';
 
 export function FinalCTA() {
   const prefersReduced = useReducedMotion();
@@ -21,10 +20,12 @@ export function FinalCTA() {
     const email = (new FormData(form).get('email') as string) || '';
     setSubmitting(true);
     try {
-      const { error } = await getSupabase()
-        .from('booking_enquiries')
-        .insert({ email });
-      if (error) throw error;
+      const response = await fetch('/api/booking-enquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'reservation', email }),
+      });
+      if (!response.ok) throw new Error('Reservation request failed');
       form.reset();
       toast({
         title: 'Reservation request received',
