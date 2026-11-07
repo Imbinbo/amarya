@@ -73,13 +73,13 @@ export function Hero() {
       {/* Content */}
       <motion.div
         style={prefersReduced ? undefined : { opacity }}
-        className="relative z-10 flex h-full flex-col items-center justify-center px-5 pb-72 text-center sm:pb-24"
+        className="relative z-10 flex h-full flex-col items-center justify-start px-5 pt-20 pb-[430px] text-center sm:pt-24 sm:pb-[300px] lg:pt-20 lg:pb-[190px]"
       >
         <motion.span
           initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-7 flex items-center gap-3 text-[11px] uppercase tracking-luxe text-gold-soft"
+          className="mb-5 flex items-center gap-3 text-[11px] uppercase tracking-luxe text-gold-soft sm:mb-6"
         >
           <span className="h-px w-8 bg-gold-soft/60" />
           A Tropical Sanctuary
@@ -101,7 +101,7 @@ export function Hero() {
           initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-8 max-w-xl text-base font-sans-body leading-relaxed text-ivory/80 sm:text-lg"
+          className="mt-5 max-w-xl text-base font-sans-body leading-relaxed text-ivory/80 sm:mt-6 sm:text-lg"
         >
           A five-star sanctuary where rainforest meets reef — private villas,
           soulful wellness, and cuisine rooted in the land and sea.
@@ -111,7 +111,7 @@ export function Hero() {
           initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1.15, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
+          className="mt-6 flex flex-col items-center gap-3 sm:mt-7 sm:flex-row sm:gap-4"
         >
           <MagneticButton
             as="a"
@@ -136,7 +136,7 @@ export function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.6 }}
-        className="absolute bottom-[210px] left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 sm:flex"
+        className="absolute bottom-[190px] left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 lg:bottom-[175px] sm:flex"
       >
         <span className="text-[10px] uppercase tracking-luxe text-ivory/60">
           Scroll
@@ -151,11 +151,11 @@ export function Hero() {
         initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 1.3, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute inset-x-0 bottom-0 z-20 w-full min-w-0 px-4 pb-5 sm:px-5 sm:pb-8"
+        className="absolute inset-x-0 bottom-0 z-20 w-full min-w-0 px-4 pb-5 sm:px-5 sm:pb-7"
       >
         <form
           onSubmit={handleBooking}
-          className="glass-light mx-auto grid w-full max-w-5xl min-w-0 grid-cols-1 gap-4 rounded-2xl px-4 py-4 text-forest-deep shadow-[0_20px_50px_-20px_rgba(20,40,28,0.4)] sm:grid-cols-2 sm:gap-x-4 sm:gap-y-5 sm:px-6 sm:py-5 lg:grid-cols-3 lg:items-end lg:gap-3"
+          className="glass-light mx-auto grid w-full max-w-7xl min-w-0 grid-cols-1 gap-3 rounded-2xl px-4 py-4 text-forest-deep shadow-[0_20px_50px_-20px_rgba(20,40,28,0.4)] sm:grid-cols-2 sm:gap-x-4 sm:gap-y-4 sm:px-6 sm:py-5 lg:grid-cols-6 lg:items-end lg:gap-3 xl:grid-cols-7"
         >
           <BookingField label="Check-in" type="date" id="checkin" name="checkin" />
           <BookingField label="Check-out" type="date" id="checkout" name="checkout" />
@@ -181,7 +181,7 @@ export function Hero() {
           <button
             type="submit"
             disabled={submitting}
-            className="mt-1 flex min-h-[52px] w-full min-w-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-forest px-5 py-3.5 text-[12px] font-sans-body uppercase tracking-wide-luxe text-ivory transition-colors hover:bg-forest-deep disabled:cursor-wait disabled:opacity-60 sm:col-span-2 sm:mt-0 sm:px-6 lg:col-span-3 lg:w-full"
+            className="mt-1 flex min-h-[52px] w-full min-w-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-forest px-5 py-3.5 text-[11px] font-sans-body uppercase tracking-[0.14em] text-ivory transition-colors hover:bg-forest-deep disabled:cursor-wait disabled:opacity-60 sm:col-span-2 sm:mt-0 sm:px-6 lg:col-span-6 lg:w-full xl:col-span-1 xl:px-3 xl:text-[10px] xl:tracking-[0.1em]"
           >
             {submitting ? (
               <>

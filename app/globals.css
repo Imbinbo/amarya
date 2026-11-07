@@ -153,3 +153,21 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--forest));
 }
+
+
+/* Keep the native text/pointer cursor available inside the Special Offers portal.
+   The custom decorative cursor is pointer-events-none and cannot intercept clicks. */
+@media (hover: hover) and (pointer: fine) {
+  .custom-cursor-active .offer-modal,
+  .custom-cursor-active .offer-modal * {
+    cursor: auto !important;
+  }
+  .custom-cursor-active .offer-modal input,
+  .custom-cursor-active .offer-modal textarea {
+    cursor: text !important;
+  }
+  .custom-cursor-active .offer-modal button,
+  .custom-cursor-active .offer-modal select {
+    cursor: pointer !important;
+  }
+}
