@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, type FormEvent } from 'react';
+import { useState, useCallback, useEffect, useRef, type FormEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Tag, Loader2 } from 'lucide-react';
@@ -16,6 +16,7 @@ export function Offers() {
   const [reserving, setReserving] = useState<string | null>(null);
   const [selectedOffer, setSelectedOffer] = useState<string | null>(null);
   const [portalReady, setPortalReady] = useState(false);
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
   // A portal keeps the dialog outside animated/overflow-hidden page sections.
   useEffect(() => {
@@ -28,6 +29,10 @@ export function Offers() {
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('offer-modal-open');
+
+    // Move keyboard focus into the modal after it is mounted.
+    const focusTimer = window.setTimeout(() => emailInputRef.current?.focus(), 50);
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && !reserving) setSelectedOffer(null);
@@ -36,6 +41,8 @@ export function Offers() {
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       document.body.style.overflow = previousOverflow;
+      document.body.classList.remove('offer-modal-open');
+      window.clearTimeout(focusTimer);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [selectedOffer, reserving]);
@@ -154,7 +161,7 @@ export function Offers() {
 
       {portalReady && selectedOffer && createPortal(
         <div
-          className="offer-modal fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-forest-deep/75 px-4 py-8 backdrop-blur-sm"
+          className="offer-modal fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto overscroll-contain bg-forest-deep/75 px-4 py-8 backdrop-blur-sm"
           role="presentation"
           onClick={(event) => {
             if (event.target === event.currentTarget) closeModal();
@@ -164,7 +171,7 @@ export function Offers() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="offer-enquiry-title"
-            className="relative z-[10000] my-auto w-full max-w-md rounded-sm bg-background p-6 text-forest-deep shadow-2xl sm:p-8"
+            className="relative z-[10000] my-auto w-full max-w-md touch-auto rounded-sm bg-background p-6 text-forest-deep shadow-2xl sm:p-8"
             onClick={(event) => event.stopPropagation()}
           >
             <button
@@ -193,10 +200,10 @@ export function Offers() {
                   name="email"
                   type="email"
                   required
-                  autoFocus
+                  ref={emailInputRef}
                   autoComplete="email"
                   placeholder="you@example.com"
-                  className="offer-modal-control relative z-[10002] block w-full cursor-text select-text border border-forest/20 bg-transparent px-4 py-3 text-sm text-forest-deep outline-none focus:border-gold focus:ring-1 focus:ring-gold"
+                  className="offer-modal-control relative z-[10002] block w-full touch-auto cursor-text select-text border border-forest/20 bg-transparent px-4 py-3 text-sm text-forest-deep outline-none focus:border-gold focus:ring-1 focus:ring-gold"
                 />
               </div>
               <div>
@@ -211,7 +218,7 @@ export function Offers() {
                   pattern="[+0-9()\s.-]{7,25}"
                   title="Enter a valid phone number"
                   placeholder="+91 98765 43210"
-                  className="offer-modal-control relative z-[10002] block w-full cursor-text select-text border border-forest/20 bg-transparent px-4 py-3 text-sm text-forest-deep outline-none focus:border-gold focus:ring-1 focus:ring-gold"
+                  className="offer-modal-control relative z-[10002] block w-full touch-auto cursor-text select-text border border-forest/20 bg-transparent px-4 py-3 text-sm text-forest-deep outline-none focus:border-gold focus:ring-1 focus:ring-gold"
                 />
               </div>
               <button

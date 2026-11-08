@@ -154,28 +154,35 @@
   background: hsl(var(--forest));
 }
 
-/* Special offer enquiry modal: keep native mouse cursors and interactions.
-   The site-wide custom cursor intentionally hides the native cursor elsewhere. */
-.custom-cursor-active .offer-modal,
-.custom-cursor-active .offer-modal * {
+
+
+/* Special-offer dialog: restore the real browser cursor and native form interaction
+   while the site-wide custom cursor remains active everywhere else. */
+body.offer-modal-open,
+body.offer-modal-open * {
   cursor: auto !important;
 }
 
-.custom-cursor-active .offer-modal input,
-.custom-cursor-active .offer-modal textarea,
-.custom-cursor-active .offer-modal select,
-.custom-cursor-active .offer-modal [contenteditable="true"] {
+body.offer-modal-open input,
+body.offer-modal-open textarea,
+body.offer-modal-open [contenteditable="true"] {
   cursor: text !important;
 }
 
-.custom-cursor-active .offer-modal button,
-.custom-cursor-active .offer-modal a,
-.custom-cursor-active .offer-modal [role="button"] {
+body.offer-modal-open button,
+body.offer-modal-open a,
+body.offer-modal-open select,
+body.offer-modal-open [role="button"] {
   cursor: pointer !important;
 }
 
-.offer-modal,
-.offer-modal [role="dialog"],
+.offer-modal {
+  pointer-events: auto !important;
+  isolation: isolate;
+  touch-action: pan-y;
+}
+
+.offer-modal *,
 .offer-modal form,
 .offer-modal input,
 .offer-modal button {
@@ -183,7 +190,9 @@
 }
 
 .offer-modal input,
-.offer-modal button {
-  user-select: auto;
-  -webkit-user-select: auto;
+.offer-modal textarea,
+.offer-modal select {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  touch-action: manipulation;
 }
