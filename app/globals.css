@@ -153,3 +153,37 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--forest));
 }
+
+/* Special offer enquiry modal: keep native mouse cursors and interactions.
+   The site-wide custom cursor intentionally hides the native cursor elsewhere. */
+.custom-cursor-active .offer-modal,
+.custom-cursor-active .offer-modal * {
+  cursor: auto !important;
+}
+
+.custom-cursor-active .offer-modal input,
+.custom-cursor-active .offer-modal textarea,
+.custom-cursor-active .offer-modal select,
+.custom-cursor-active .offer-modal [contenteditable="true"] {
+  cursor: text !important;
+}
+
+.custom-cursor-active .offer-modal button,
+.custom-cursor-active .offer-modal a,
+.custom-cursor-active .offer-modal [role="button"] {
+  cursor: pointer !important;
+}
+
+.offer-modal,
+.offer-modal [role="dialog"],
+.offer-modal form,
+.offer-modal input,
+.offer-modal button {
+  pointer-events: auto !important;
+}
+
+.offer-modal input,
+.offer-modal button {
+  user-select: auto;
+  -webkit-user-select: auto;
+}

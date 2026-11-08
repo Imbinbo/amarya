@@ -54,7 +54,7 @@ export function Hero() {
   };
 
   return (
-    <section id="home" className="relative min-h-[100svh] w-full overflow-hidden bg-forest-deep lg:h-[100svh] lg:min-h-[900px]">
+    <section id="home" className="relative h-[100svh] min-h-[900px] w-full overflow-hidden sm:min-h-[680px]">
       {/* Cinematic background */}
       <motion.div
         style={prefersReduced ? undefined : { y }}
@@ -73,7 +73,7 @@ export function Hero() {
       {/* Content */}
       <motion.div
         style={prefersReduced ? undefined : { opacity }}
-        className="relative z-10 flex min-h-[680px] flex-col items-center justify-center px-5 pt-28 pb-12 text-center sm:min-h-[720px] sm:pt-32 lg:h-full lg:min-h-0 lg:pt-0 lg:pb-72"
+        className="relative z-10 flex h-full flex-col items-center justify-center px-5 pb-72 text-center sm:pb-24"
       >
         <motion.span
           initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 18 }}
@@ -136,7 +136,7 @@ export function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.6 }}
-        className="absolute bottom-[210px] left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 lg:flex"
+        className="absolute bottom-[210px] left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 sm:flex"
       >
         <span className="text-[10px] uppercase tracking-luxe text-ivory/60">
           Scroll
@@ -151,7 +151,7 @@ export function Hero() {
         initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 1.3, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-20 w-full min-w-0 px-4 pt-2 pb-6 sm:px-5 sm:pb-8 lg:absolute lg:inset-x-0 lg:bottom-0 lg:pt-0"
+        className="absolute inset-x-0 bottom-0 z-20 w-full min-w-0 px-4 pb-5 sm:px-5 sm:pb-8"
       >
         <form
           onSubmit={handleBooking}
